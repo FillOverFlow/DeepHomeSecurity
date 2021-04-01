@@ -38,6 +38,7 @@ def preprocess_input(video):
     # Reshape to 128x171
     reshape_frames = np.zeros((frames.shape[0], 128, 171, frames.shape[3]))
     for i, img in enumerate(frames):
+        #img = cv2.resize(img,(128,171)) 
         img = imresize(img, (128, 171), 'bicubic')
         reshape_frames[i, :, :, :] = img
 

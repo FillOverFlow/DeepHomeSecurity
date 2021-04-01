@@ -7,17 +7,16 @@ from utils.visualization_util import *
 def run_demo():
 
     video_name = os.path.basename(cfg.sample_video_path).split('.')[0]
-
+    video_path = cfg.sample_video_path
+ 
     # read video
-    video_clips, num_frames = get_video_clips(cfg.sample_video_path)
-
-    print("Number of clips in the video : ", len(video_clips))
+    video_clips, num_frames = get_video_clips(video_path)
+    print("chekc num frames", num_frames)
 
     # build models
     feature_extractor = c3d_feature_extractor()
     classifier_model = build_classifier_model()
 
-    print("Models initialized")
 
     # extract features
     rgb_features = []
@@ -25,7 +24,7 @@ def run_demo():
         clip = np.array(clip)
         if len(clip) < params.frame_count:
             continue
-
+        
         clip = preprocess_input(clip)
         rgb_feature = feature_extractor.predict(clip)[0]
         rgb_features.append(rgb_feature)
@@ -33,8 +32,8 @@ def run_demo():
         print("Processed clip : ", i)
 
     rgb_features = np.array(rgb_features)
-
-    # bag features
+    #print("check ",rgb_features)
+    #bag features
     rgb_feature_bag = interpolate(rgb_features, params.features_per_bag)
 
     # classify using the trained classifier model
@@ -44,7 +43,8 @@ def run_demo():
 
     predictions = extrapolate(predictions, num_frames)
 
-    save_path = os.path.join(cfg.output_folder, video_name + '.gif')
+    save_path = os.path.join(cfg.output_folder, video_name + '.mpeg4')
+    print("save path ", save_path)
     # visualize predictions
     visualize_predictions(cfg.sample_video_path, predictions, save_path)
 

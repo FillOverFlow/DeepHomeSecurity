@@ -1,6 +1,7 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib.animation import FuncAnimation
 from utils.video_util import *
 
@@ -32,6 +33,10 @@ def visualize_predictions(video_path, predictions, save_path):
     frames = get_video_frames(video_path)
     assert len(frames) == len(predictions)
 
+    # Set up formatting for the movie files
+    Writer = animation.writers['ffmpeg']
+    writer = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800, codec='mpeg4')
+
     fig, ax = plt.subplots(figsize=(5, 5))
     fig.set_tight_layout(True)
 
@@ -40,7 +45,11 @@ def visualize_predictions(video_path, predictions, save_path):
     fig_prediction.set_xlim(0, len(frames))
     fig_prediction.set_ylim(0, 1.15)
 
+    # print("show all frame ", frames)
+    # print("show all predictions ", predictions)
+
     def update(i):
+        print("update video frame")
         frame = frames[i]
         x = range(0, i)
         y = predictions[0:i]
@@ -52,12 +61,15 @@ def visualize_predictions(video_path, predictions, save_path):
     # animating over 10 frames, with an interval of 20ms between frames.
 
     anim = FuncAnimation(fig, update, frames=np.arange(0, len(frames), 10), interval=1, repeat=False)
+    anim.save('result.mp4', dpi=200, writer=writer)
 
-    if save_path:
-        anim.save(save_path, dpi=200, writer='imagemagick')
-    else:
-        plt.show()
+    # if save_path:
+    #     print("i will write this by myself...")
+    #     plt.show()
+    #     #anim.save(save_path, dpi=200, writer='imagemagick')
+    # else:
+    #     plt.show()
 
-    return
+    
 
 
