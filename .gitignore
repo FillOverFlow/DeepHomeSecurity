@@ -153,3 +153,5 @@ Thumbs.db #thumbnail cache on Windows
 
 trained_models/c3d_sports1m.h5
 img_convert
+input
+output
